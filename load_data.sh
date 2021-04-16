@@ -2,7 +2,7 @@
 
 set -e
 
-DATABASE_NAME="u13367__global_users_activity"
+DATABASE_NAME="s54712__global_user_info"
 
 mkdir /tmp/$$
 echo /tmp/$$
