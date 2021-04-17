@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Activity of (soon-to-be) global rollbacker</h1>
+
+    <ul>
+        <li>Username: {{username}}</li>
+        <li>CentralAuth: <a href="https://meta.wikimedia.org/wiki/Special:CentralAuth/{{username}}">meta:Special:CentralAuth/{{username}}</a></li>
+    </ul>
+
+    <h2>Graph</h2>
+    <div id="chart_div"></div>
+</div>
+<script>
+    google.charts.load('current', {packages: ['corechart', 'line']});
+
+    google.charts.setOnLoadCallback(() => {
+        fetch('/api/userinfo/undos/{{username}}.json')
+            .then(response => response.json())
+            .then(rawData => {
+                let jsData = new google.visualization.DataTable();
+                jsData.addColumn('string', 'month');
+                jsData.addColumn('number', 'Undo');
+                jsData.addColumn('number', 'Rollback');
+                jsData.addColumn('number', 'Total');
+                Object.keys(rawData.byTime).forEach(month => {
+                    jsData.addRows([
+                        [
+                            month,
+                            rawData.byTime[month]['mw-undo'],
+                            rawData.byTime[month]['mw-rollback'],
+                            rawData.byTime[month]['total']
+                        ]
+                    ]);
+                });
+                
+                // Actually draw the chart
+                let chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                chart.draw(jsData);
+            })
+    });
+</script>
+{% endblock %}
