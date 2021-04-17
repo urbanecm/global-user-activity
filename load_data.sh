@@ -4,6 +4,9 @@ set -e
 
 DATABASE_NAME="s54712__global_user_info"
 
+scriptdir="`dirname \"$0\"`"
+cd $scriptdir
+
 mkdir /tmp/$$
 echo /tmp/$$
 
